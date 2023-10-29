@@ -1,15 +1,15 @@
 ; ------------------------------------------------------------------------------
 ;  Metalfish OS Bootloader source code
-;  File: puts_hex.asm
+;  File: boot/puts_hex.asm
 ;  Title: Вывод hex-символов (bootsector)
-;  Last Change Date: 29 October 2023, 14:28 (UTC)
+;  Last Change Date: 29 October 2023, 16:12 (UTC)
 ;  Author: Okulus Dev
 ;  License: GNU GPL v3
 ; ------------------------------------------------------------------------------
 ; Description: null
 ; ------------------------------------------------------------------------------
 
-print_hex:
+puts_hex:
 	pusha						; Сохраняем значения регистров в стеке
 	mov cx, 0					; Регистр CX будет служить счетчиком
 
@@ -56,6 +56,6 @@ next:
 end:
 	mov bx, HEX_OUT				; Делаем так, чтобы bx снова указывал на первый
 								; символ строки HEX_OUT
-	call print_string			; выводи на экран строку из регистра BX
+	call puts_chars				; выводи на экран строку из регистра BX
 	popa						; Возвращаем регистрам их изначальное значение
 	ret							; Заканчиваем выполнение функции
