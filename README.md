@@ -14,7 +14,8 @@ Metalfish OS - простая и быстрая операционная сис�
 git clone https://github.com/OkulusDev/Metalfish-OS.git
 cd Metalfish-OS
 make build
-make run```
+make run
+```
 
 ## Документация
 Пользовательскую документацию можно получить по [этой ссылке](./docs/ru/index.md).
