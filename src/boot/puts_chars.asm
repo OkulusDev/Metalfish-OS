@@ -1,8 +1,8 @@
 ; ------------------------------------------------------------------------------
 ;  Metalfish OS Bootloader source code
 ;  File: puts_chars.asm
-;  Title: Loop bootloader (bootsector)
-;  Last Change Date: 29 October 2023, 14:17 (UTC)
+;  Title: Метки для вывода строк (bootsector)
+;  Last Change Date: 29 October 2023, 14:28 (UTC)
 ;  Author: Okulus Dev
 ;  License: GNU GPL v3
 ; ------------------------------------------------------------------------------
