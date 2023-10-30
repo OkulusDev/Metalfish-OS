@@ -20,7 +20,7 @@ s32		kmain() {
 	
 	clear_screen();
 
-	kprint("Welcome to Metalfish OS 0.8.9\n");
+	kprint("Welcome to Metalfish OS 0.8.10\n");
 	kprint("\n\nRepository: https://github.com/OkulusDev/Metalfish-OS");
 
 	return 0;

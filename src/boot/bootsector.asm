@@ -57,9 +57,9 @@ BEGIN_PM:
 
 
 BOOT_DRIVE:			db 0
-MSG_REAL_MODE:		db "Started in 16-bit Real Mode", 0
-MSG_PROT_MODE:		db "Successfully landed in 32-bit Protected mode", 0
-MSG_LOAD_KERNEL:	db "Loading kernel into VIDEO_MEMORY", 0
+MSG_REAL_MODE:		db "[Start] 16Bit Real Mode", 0 						; [Старт] 16 битный реальный режим
+MSG_PROT_MODE:		db "[Success] landed in 32Bit Protected mode", 0        ; [Успех] 32 битный защищенный режим
+MSG_LOAD_KERNEL:	db "[Loading] kernel into VIDEO_MEMORY", 0 				; [Загрузка] ядра с видео памятью
 
 times 510-($-$$) db 0
 dw 0xaa55
