@@ -2,7 +2,7 @@
 ;  Metalfish OS Bootloader source code
 ;  File: boot/kernel_entry.asm
 ;  Title:	Код, служащий входной точкой для функции kmain из kernel.c
-;  Last Change Date: 30 October 2023, 12:05 (UTC)
+;  Last Change Date: 30 October 2023, 12:28 (UTC)
 ;  Author: Okulus Dev
 ;  License: GNU GPL v3
 ; ------------------------------------------------------------------------------

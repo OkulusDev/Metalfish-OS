@@ -2,7 +2,7 @@
 ;  Metalfish OS Bootloader source code
 ;  File: boot/puts_chars32.asm
 ;  Title: Функция вывода строки на экран в 32-битном защищенном режиме
-;  Last Change Date: 30 October 2023, 11:30 (UTC)
+;  Last Change Date: 30 October 2023, 12:28 (UTC)
 ;  Author: Okulus Dev
 ;  License: GNU GPL v3
 ; ------------------------------------------------------------------------------

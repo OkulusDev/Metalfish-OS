@@ -2,12 +2,12 @@
 ;  Metalfish OS Bootloader source code
 ;  File: boot/bootsector.asm
 ;  Title: Загрузочный сектор и вывод строк (bootsector)
-;  Last Change Date: 30 October 2023, 11:30 (UTC)
+;  Last Change Date: 30 October 2023, 12:28 (UTC)
 ;  Author: Okulus Dev
 ;  License: GNU GPL v3
 ; -----------------------------------------------------------------------------
 ; Description:
-;  Загрузочный сектор
+;  Загрузочный сектор Metalfish OS
 ; -----------------------------------------------------------------------------
 
 [org 0x7c00]

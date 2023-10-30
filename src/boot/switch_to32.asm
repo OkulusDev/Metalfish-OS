@@ -2,7 +2,7 @@
 ;  Metalfish OS Bootloader source code
 ;  File: boot/switch_to32.asm
 ;  Title: Переключаемся в PM (Protected mode, защищенный режим)
-;  Last Change Date: 30 October 2023, 11:30 (UTC)
+;  Last Change Date: 30 October 2023, 12:29 (UTC)
 ;  Author: Okulus Dev
 ;  License: GNU GPL v3
 ; ------------------------------------------------------------------------------

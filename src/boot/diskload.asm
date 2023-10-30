@@ -2,7 +2,7 @@
 ;  Metalfish OS Bootloader source code
 ;  File: boot/diskload.asm.asm
 ;  Title: Функция чтения диска (bootsector)
-;  Last Change Date: 29 October 2023, 16:12 (UTC)
+;  Last Change Date: 30 October 2023, 12:28 (UTC)
 ;  Author: Okulus Dev
 ;  License: GNU GPL v3
 ; ------------------------------------------------------------------------------
