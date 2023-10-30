@@ -11,6 +11,11 @@ Metalfish OS - простая и быстрая операционная сис�
 Перед запуском, установите make, nasm, gcc
 
 ```bash
+wget http://newos.org/toolchains/i386-elf-4.9.1-Linux-x86_64.tar.xz
+sudo mkdir /usr/local/i386elfgcc
+sudo tar -xf i386-elf-4.9.1-Linux-x86_64.tar.xz -C /usr/local/i386elfgcc --strip-components=1
+export PATH=$PATH:/usr/local/i386elfgcc/bin
+
 git clone https://github.com/OkulusDev/Metalfish-OS.git
 cd Metalfish-OS
 make build
