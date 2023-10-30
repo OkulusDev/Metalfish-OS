@@ -21,7 +21,7 @@ disk_load:
 	push dx
 	mov ah, 0x02			; Указвыаем БИОСу что нам нужна рутина чтения диска
 							; Указываем что нам нужно:
-	mov al, dh				; 1. Прочитать кол-во секторов, равное значению в DH
+	mov al, dh				; 1. Прочитать кол-во секторов, равное значению в dh
 	mov ch, 0x00			; 2. Выбрать нулевой цилиндр
 	mov dh, 0x00			; 3. Выбрать нулевую головку
 	mov cl, 0x02			; 4. Начинать считывать со второго сектора (т.е.
@@ -66,13 +66,13 @@ disk_sectors_error:
 	call puts_chars
 
 SUCCESS_MSG:
-	db "[SUCCESS] Disk was successfully read ", 0
+	db "Disk was successfully read ", 0
 
 DISK_ERR_MSG:
-	db "[DISK ERROR] Disk read error! ", 0
+	db "Disk read error! ", 0
 
 SECTORS_ERR_MSG:
-	db "[SECTORS ERROR] Incorrect number of sectors read ", 0
+	db "Incorrect number of sectors read ", 0
 
 disk_loop:
 	jmp $
