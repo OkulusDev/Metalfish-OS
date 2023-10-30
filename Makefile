@@ -42,4 +42,3 @@ kernel.elf: kernel_entry.o kernel.o
 	
 clean:
 	rm bin/*.o
-	rm bin/*.c
