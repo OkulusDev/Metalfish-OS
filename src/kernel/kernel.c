@@ -14,17 +14,14 @@
 #include "../drivers/screen.h"
 
 
-s32		kmain()
-{	
-	/* Простая программа чтобы продемонстрировать чего мы добились. */
-	/* Поиграйтесь с кодом и добавьте больше логики, попробуйте заполнить все */
-	/* 25 строк чтобы посмотреть работу функции scroll_line. */
-
+s32		kmain() {
+	// Запускаемая функция ядра //
 	u8 i;
 	
 	clear_screen();
 
-	kprint("Welcome to Metalfish OS 0.8.7\n");
+	kprint("Welcome to Metalfish OS 0.8.9\n");
+	kprint("\n\nRepository: https://github.com/OkulusDev/Metalfish-OS");
 
 	return 0;
 }
