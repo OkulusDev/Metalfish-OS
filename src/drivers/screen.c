@@ -88,7 +88,7 @@ void	clear_screen()
 	u16	offset = 0;
 	while (offset < (MAX_ROWS * MAX_COLS * 2))
 	{
-		write('\0', WHITE_ON_BLACK, offset);
+		write('\0', WHITE_ON_BLUE, offset);
 		offset += 2;
 	}
 	set_cursor(0);
@@ -124,7 +124,6 @@ u16		get_cursor()
 void	set_cursor(u16 pos)
 {
 	/* Функция, устаналивающая курсор по смещнию (позиции) pos */
-	/* Поиграться с битами можно тут http://bitwisecmd.com/ */
 
 	pos /= 2;	// конвертируем в cell offset (в позицию по клеткам, а не
 				// символам)

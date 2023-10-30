@@ -41,4 +41,5 @@ kernel.elf: kernel_entry.o kernel.o
 	$(LD) -o $(BIN_DIR)/kernel.bin -Ttext 0x1000 $(BIN_DIR)/kernel_entry.o $(BIN_DIR)/kernel.o $(O_FILES) -o $(BIN_DIR)/kernel.elf
 	
 clean:
-	rm bin/*
+	rm bin/*.o
+	rm bin/*.c
