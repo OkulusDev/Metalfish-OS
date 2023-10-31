@@ -23,7 +23,7 @@ export PATH=$PATH:/usr/local/i386elfgcc/bin
 # Установка и компиляция
 git clone https://github.com/OkulusDev/Metalfish-OS.git
 cd Metalfish-OS
-make build
+make build clean
 make run
 ```
 
@@ -42,6 +42,7 @@ make run
  + 28.10.2023 - создание бутсектора
  + 29.10.2023 - улучшение бутсектора и системы сборки
  + 30.10.2023 - улучшение бутсектора (загрузка диска, GDT) и создание ядра
+ + 31.10.2023 - создание драйвера клавиатуры, прерывания
 
 ## Журнал версий
 
