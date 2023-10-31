@@ -11,127 +11,280 @@
 
 
 #include "screen.h"
-#include "lowlevel_io.h"
-#include "../common.h"
+#include "../cpu/ports.h"
+// #include "lowlevel_io.h"
+#include "../libc/mem.h"
 
-void	kprint(u8 *str)
-{
-	/* Функция печати строки */
-	
-	// u8 *str: указатель на строку (на первый символ строки). Строка должна
-	// быть null-terminated.
+/* Declaration of private functions */
+int get_cursor_offset();
+void set_cursor_offset(int offset);
+int print_char(char c, int col, int row, char attr);
+int get_offset(int col, int row);
+int get_offset_row(int offset);
+int get_offset_col(int offset);
 
-	while (*str)
-	{
-		putchar(*str, WHITE_ON_BLUE);
-		str++;
-	}
+/**********************************************************
+ * Public Kernel API functions                            *
+ **********************************************************/
+
+/**
+ * Print a message on the specified location
+ * If col, row, are negative, we will use the current offset
+ */
+void kprint_at(char *message, int col, int row) {
+    /* Set cursor if col/row are negative */
+    int offset;
+    if (col >= 0 && row >= 0)
+        offset = get_offset(col, row);
+    else {
+        offset = get_cursor_offset();
+        row = get_offset_row(offset);
+        col = get_offset_col(offset);
+    }
+
+    /* Loop through message and print it */
+    int i = 0;
+    while (message[i] != 0) {
+        offset = print_char(message[i++], col, row, WHITE_ON_BLUE);
+        /* Compute row/col for next iteration */
+        row = get_offset_row(offset);
+        col = get_offset_col(offset);
+    }
 }
 
-void	putchar(u8 character, u8 attribute_byte)
-{
-	/* Более высокоуровневая функция печати символа */
-
-	// u8 character: байт, соответствующий символу
-	// u8 attribute_byte: байт, соответствующий цвету текста/фона символа
-
-	u16 offset;
-
-	offset = get_cursor();
-	if (character == '\n')
-	{
-		// Переводим строку.
-		if ((offset / 2 / MAX_COLS) == (MAX_ROWS - 1)) 
-			scroll_line();
-		else
-			set_cursor((offset - offset % MAX_COLS) + MAX_COLS*2);
-	}
-	else 
-	{
-		if (offset == (MAX_COLS * MAX_ROWS * 2)) scroll_line();
-		write(character, attribute_byte, offset);
-		set_cursor(offset+2);
-	}
+void kprint(char *message) {
+    kprint_at(message, -1, -1);
 }
 
-void	scroll_line()
-{
-	/* Функция скроллинга */
-
-	u8 i = 1;		// Начинаем со второй строки.
-	u16 last_line;	// Начало последней строки.
-
-	while (i < MAX_ROWS)
-	{
-		memcpy(
-			(u8 *)(VIDEO_ADDRESS + (MAX_COLS * i * 2)),
-			(u8 *)(VIDEO_ADDRESS + (MAX_COLS * (i-1) * 2)),
-			(MAX_COLS*2)
-		);
-		i++;
-	}
-
-	last_line = (MAX_COLS*MAX_ROWS*2) - MAX_COLS*2;
-	i = 0;
-	while (i < MAX_COLS)
-	{
-		write('\0', WHITE_ON_BLACK, (last_line + i * 2));
-		i++;
-	}
-	set_cursor(last_line);
+void kprint_backspace() {
+    int offset = get_cursor_offset()-2;
+    int row = get_offset_row(offset);
+    int col = get_offset_col(offset);
+    print_char(0x08, col, row, WHITE_ON_BLUE);
 }
 
-void	clear_screen()
-{
-	/* Функция очистки экрана */
 
-	u16	offset = 0;
-	while (offset < (MAX_ROWS * MAX_COLS * 2))
-	{
-		write('\0', WHITE_ON_BLUE, offset);
-		offset += 2;
-	}
-	set_cursor(0);
+/**********************************************************
+ * Private kernel functions                               *
+ **********************************************************/
+
+
+/**
+ * Innermost print function for our kernel, directly accesses the video memory 
+ *
+ * If 'col' and 'row' are negative, we will print at current cursor location
+ * If 'attr' is zero it will use 'white on black' as default
+ * Returns the offset of the next character
+ * Sets the video cursor to the returned offset
+ */
+int print_char(char c, int col, int row, char attr) {
+    u8 *vidmem = (u8*) VIDEO_ADDRESS;
+    if (!attr) attr = WHITE_ON_BLACK;
+
+    /* Error control: print a red 'E' if the coords aren't right */
+    if (col >= MAX_COLS || row >= MAX_ROWS) {
+        vidmem[2*(MAX_COLS)*(MAX_ROWS)-2] = 'E';
+        vidmem[2*(MAX_COLS)*(MAX_ROWS)-1] = RED_ON_WHITE;
+        return get_offset(col, row);
+    }
+
+    int offset;
+    if (col >= 0 && row >= 0) offset = get_offset(col, row);
+    else offset = get_cursor_offset();
+
+    if (c == '\n') {
+        row = get_offset_row(offset);
+        offset = get_offset(0, row+1);
+    } else if (c == 0x08) { /* Backspace */
+        vidmem[offset] = ' ';
+        vidmem[offset+1] = attr;
+    } else {
+        vidmem[offset] = c;
+        vidmem[offset+1] = attr;
+        offset += 2;
+    }
+
+    /* Check if the offset is over screen size and scroll */
+    if (offset >= MAX_ROWS * MAX_COLS * 2) {
+        int i;
+        for (i = 1; i < MAX_ROWS; i++) 
+            memory_copy((u8*)(get_offset(0, i) + VIDEO_ADDRESS),
+                        (u8*)(get_offset(0, i-1) + VIDEO_ADDRESS),
+                        MAX_COLS * 2);
+
+        /* Blank last line */
+        char *last_line = (char*) (get_offset(0, MAX_ROWS-1) + (u8*) VIDEO_ADDRESS);
+        for (i = 0; i < MAX_COLS * 2; i++) last_line[i] = 0;
+
+        offset -= 2 * MAX_COLS;
+    }
+
+    set_cursor_offset(offset);
+    return offset;
 }
 
-void	write(u8 character, u8 attribute_byte, u16 offset)
-{
-	/* Функция печати символа на экран с помощью VGA по адресу 0xb8000 */
-
-	// u8 character: байт, соответствующий символу
-	// u8 attribute_byte: байт, соответствующий цвету текста/фона символа
-	// u16 offset: смещение (позиция), по которому нужно распечатать символ
-	
-	u8 *vga = (u8 *) VIDEO_ADDRESS;
-	vga[offset] = character;
-	vga[offset + 1] = attribute_byte;
+int get_cursor_offset() {
+    /* Use the VGA ports to get the current cursor position
+     * 1. Ask for high byte of the cursor offset (data 14)
+     * 2. Ask for low byte (data 15)
+     */
+    port_byte_out(REG_SCREEN_CTRL, 14);
+    int offset = port_byte_in(REG_SCREEN_DATA) << 8; /* High byte: << 8 */
+    port_byte_out(REG_SCREEN_CTRL, 15);
+    offset += port_byte_in(REG_SCREEN_DATA);
+    return offset * 2; /* Position * size of character cell */
 }
 
-u16		get_cursor()
-{
-	/* Функция, возвращающая позицию курсора (char offset). */
-
-	port_byte_out(REG_SCREEN_CTRL, 14);				// Запрашиваем верхний байт
-	u8 high_byte = port_byte_in(REG_SCREEN_DATA);	// Принимаем его
-	port_byte_out(REG_SCREEN_CTRL, 15);				// Запрашиваем нижний байт
-	u8 low_byte = port_byte_in(REG_SCREEN_DATA);	// Принимаем и его
-	// Возвращаем смещение умножая его на 2, т.к. порты возвращают смещение в
-	// клетках экрана (cell offset), а нам нужно в символах (char offset), т.к.
-	// на каждый символ у нас 2 байта
-	return (((high_byte << 8) + low_byte) * 2);
+void set_cursor_offset(int offset) {
+    /* Similar to get_cursor_offset, but instead of reading we write data */
+    offset /= 2;
+    port_byte_out(REG_SCREEN_CTRL, 14);
+    port_byte_out(REG_SCREEN_DATA, (u8)(offset >> 8));
+    port_byte_out(REG_SCREEN_CTRL, 15);
+    port_byte_out(REG_SCREEN_DATA, (u8)(offset & 0xff));
 }
 
-void	set_cursor(u16 pos)
-{
-	/* Функция, устаналивающая курсор по смещнию (позиции) pos */
+void clear_screen() {
+    int screen_size = MAX_COLS * MAX_ROWS;
+    int i;
+    u8 *screen = (u8*) VIDEO_ADDRESS;
 
-	pos /= 2;	// конвертируем в cell offset (в позицию по клеткам, а не
-				// символам)
-	// Устанавливаем позицию курсора
-	port_byte_out(REG_SCREEN_CTRL, 14);			// Указываем, что будем
-												// передавать верхний байт
-	port_byte_out(REG_SCREEN_DATA, (pos >> 8));	// Передаем верхний байт
-	port_byte_out(REG_SCREEN_CTRL, 15);			// Указываем, что будем
-												// передавать нижний байт
-	port_byte_out(REG_SCREEN_DATA, (pos & 0xff));	// передаем нижний байт
+    for (i = 0; i < screen_size; i++) {
+        screen[i*2] = ' ';
+        screen[i*2+1] = WHITE_ON_BLUE;
+    }
+    set_cursor_offset(get_offset(0, 0));
 }
+
+
+int get_offset(int col, int row) { return 2 * (row * MAX_COLS + col); }
+int get_offset_row(int offset) { return offset / (2 * MAX_COLS); }
+int get_offset_col(int offset) { return (offset - (get_offset_row(offset)*2*MAX_COLS))/2; }
+
+
+
+// #include "screen.h"
+// #include "lowlevel_io.h"
+// #include "../common.h"
+// 
+// void	kprint(u8 *str)
+// {
+// 	/* Функция печати строки */
+// 	
+// 	// u8 *str: указатель на строку (на первый символ строки). Строка должна
+// 	// быть null-terminated.
+// 
+// 	while (*str)
+// 	{
+// 		putchar(*str, WHITE_ON_BLUE);
+// 		str++;
+// 	}
+// }
+// 
+// void	putchar(u8 character, u8 attribute_byte)
+// {
+// 	/* Более высокоуровневая функция печати символа */
+// 
+// 	// u8 character: байт, соответствующий символу
+// 	// u8 attribute_byte: байт, соответствующий цвету текста/фона символа
+// 
+// 	u16 offset;
+// 
+// 	offset = get_cursor();
+// 	if (character == '\n')
+// 	{
+// 		// Переводим строку.
+// 		if ((offset / 2 / MAX_COLS) == (MAX_ROWS - 1)) 
+// 			scroll_line();
+// 		else
+// 			set_cursor((offset - offset % MAX_COLS) + MAX_COLS*2);
+// 	}
+// 	else 
+// 	{
+// 		if (offset == (MAX_COLS * MAX_ROWS * 2)) scroll_line();
+// 		write(character, attribute_byte, offset);
+// 		set_cursor(offset+2);
+// 	}
+// }
+// 
+// void	scroll_line()
+// {
+// 	/* Функция скроллинга */
+// 
+// 	u8 i = 1;		// Начинаем со второй строки.
+// 	u16 last_line;	// Начало последней строки.
+// 
+// 	while (i < MAX_ROWS)
+// 	{
+// 		memcpy(
+// 			(u8 *)(VIDEO_ADDRESS + (MAX_COLS * i * 2)),
+// 			(u8 *)(VIDEO_ADDRESS + (MAX_COLS * (i-1) * 2)),
+// 			(MAX_COLS*2)
+// 		);
+// 		i++;
+// 	}
+// 
+// 	last_line = (MAX_COLS*MAX_ROWS*2) - MAX_COLS*2;
+// 	i = 0;
+// 	while (i < MAX_COLS)
+// 	{
+// 		write('\0', WHITE_ON_BLACK, (last_line + i * 2));
+// 		i++;
+// 	}
+// 	set_cursor(last_line);
+// }
+// 
+// void	clear_screen()
+// {
+// 	/* Функция очистки экрана */
+// 
+// 	u16	offset = 0;
+// 	while (offset < (MAX_ROWS * MAX_COLS * 2))
+// 	{
+// 		write('\0', WHITE_ON_BLUE, offset);
+// 		offset += 2;
+// 	}
+// 	set_cursor(0);
+// }
+// 
+// void	write(u8 character, u8 attribute_byte, u16 offset)
+// {
+// 	/* Функция печати символа на экран с помощью VGA по адресу 0xb8000 */
+// 
+// 	// u8 character: байт, соответствующий символу
+// 	// u8 attribute_byte: байт, соответствующий цвету текста/фона символа
+// 	// u16 offset: смещение (позиция), по которому нужно распечатать символ
+// 	
+// 	u8 *vga = (u8 *) VIDEO_ADDRESS;
+// 	vga[offset] = character;
+// 	vga[offset + 1] = attribute_byte;
+// }
+// 
+// u16		get_cursor()
+// {
+// 	/* Функция, возвращающая позицию курсора (char offset). */
+// 
+// 	port_byte_out(REG_SCREEN_CTRL, 14);				// Запрашиваем верхний байт
+// 	u8 high_byte = port_byte_in(REG_SCREEN_DATA);	// Принимаем его
+// 	port_byte_out(REG_SCREEN_CTRL, 15);				// Запрашиваем нижний байт
+// 	u8 low_byte = port_byte_in(REG_SCREEN_DATA);	// Принимаем и его
+// 	// Возвращаем смещение умножая его на 2, т.к. порты возвращают смещение в
+// 	// клетках экрана (cell offset), а нам нужно в символах (char offset), т.к.
+// 	// на каждый символ у нас 2 байта
+// 	return (((high_byte << 8) + low_byte) * 2);
+// }
+// 
+// void	set_cursor(u16 pos)
+// {
+// 	/* Функция, устаналивающая курсор по смещнию (позиции) pos */
+// 
+// 	pos /= 2;	// конвертируем в cell offset (в позицию по клеткам, а не
+// 				// символам)
+// 	// Устанавливаем позицию курсора
+// 	port_byte_out(REG_SCREEN_CTRL, 14);			// Указываем, что будем
+// 												// передавать верхний байт
+// 	port_byte_out(REG_SCREEN_DATA, (pos >> 8));	// Передаем верхний байт
+// 	port_byte_out(REG_SCREEN_CTRL, 15);			// Указываем, что будем
+// 												// передавать нижний байт
+// 	port_byte_out(REG_SCREEN_DATA, (pos & 0xff));	// передаем нижний байт
+// }

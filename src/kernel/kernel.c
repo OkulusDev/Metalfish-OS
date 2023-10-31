@@ -10,18 +10,37 @@
 * ----------------------------------------------------------------------------*/
 
 
-#include "../common.h"
+// #include "../common.h"
 #include "../drivers/screen.h"
+#include "../cpu/isr.h"
+#include "kernel.h"
+#include "../libc/string.h"
 
 
-s32		kmain() {
+void	kmain() {
 	// Запускаемая функция ядра //
-	u8 i;
-	
 	clear_screen();
+	isr_install();
+    irq_install();
 
-	kprint("Welcome to Metalfish OS 0.8.11\n");
-	kprint("\n\nRepository: https://github.com/OkulusDev/Metalfish-OS");
+	// clear_screen();
 
-	return 0;
+	kprint("Welcome to Metalfish OS 0.9.11\n");
+	kprint("Repository: https://github.com/OkulusDev/Metalfish-OS\n\n");
+
+	kprint("MetalShell v0.1.0\n"
+	        "Type END to halt the CPU\n> ");
 }
+	
+void user_input(char *input) {
+    if (strcmp(input, "END") == 0) {
+        kprint("Stopping the CPU. Bye!\n");
+        asm volatile("hlt");
+    }
+    
+    kprint("You said: ");
+    
+    kprint(input);
+    kprint("\n> ");
+}
+	
