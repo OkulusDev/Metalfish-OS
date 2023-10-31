@@ -12,7 +12,6 @@
 
 #include "screen.h"
 #include "../cpu/ports.h"
-// #include "lowlevel_io.h"
 #include "../libc/mem.h"
 
 /* Declaration of private functions */
@@ -45,7 +44,7 @@ void kprint_at(char *message, int col, int row) {
     /* Loop through message and print it */
     int i = 0;
     while (message[i] != 0) {
-        offset = print_char(message[i++], col, row, WHITE_ON_BLUE);
+        offset = print_char(message[i++], col, row, WHITE_ON_BLACK);
         /* Compute row/col for next iteration */
         row = get_offset_row(offset);
         col = get_offset_col(offset);
@@ -60,7 +59,7 @@ void kprint_backspace() {
     int offset = get_cursor_offset()-2;
     int row = get_offset_row(offset);
     int col = get_offset_col(offset);
-    print_char(0x08, col, row, WHITE_ON_BLUE);
+    print_char(0x08, col, row, WHITE_ON_BLACK);
 }
 
 
@@ -151,7 +150,7 @@ void clear_screen() {
 
     for (i = 0; i < screen_size; i++) {
         screen[i*2] = ' ';
-        screen[i*2+1] = WHITE_ON_BLUE;
+        screen[i*2+1] = WHITE_ON_BLACK;
     }
     set_cursor_offset(get_offset(0, 0));
 }
@@ -176,7 +175,7 @@ int get_offset_col(int offset) { return (offset - (get_offset_row(offset)*2*MAX_
 // 
 // 	while (*str)
 // 	{
-// 		putchar(*str, WHITE_ON_BLUE);
+// 		putchar(*str, WHITE_ON_BLACK);
 // 		str++;
 // 	}
 // }
@@ -241,7 +240,7 @@ int get_offset_col(int offset) { return (offset - (get_offset_row(offset)*2*MAX_
 // 	u16	offset = 0;
 // 	while (offset < (MAX_ROWS * MAX_COLS * 2))
 // 	{
-// 		write('\0', WHITE_ON_BLUE, offset);
+// 		write('\0', WHITE_ON_BLACK, offset);
 // 		offset += 2;
 // 	}
 // 	set_cursor(0);

@@ -7,7 +7,7 @@ LD=i386-elf-ld
 build:
 	$(ASM) src/boot/bootsector.asm -f bin -o bin/bootsector.bin
 	$(ASM) src/boot/kernel_entry.asm -f elf -o bin/kernel_entry.o
-	i386-elf-gcc -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -ffreestanding -c src/kernel/kernel.c -o bin/kernel.o
+	$(C) -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -ffreestanding -c src/kernel/kernel.c -o bin/kernel.o
 	$(ASM) src/cpu/interrupt.asm -f elf -o bin/interrupt.o
 	$(C) -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -ffreestanding -c src/drivers/keyboard.c -o bin/keyboard.o
 	$(C) -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -ffreestanding -c src/drivers/screen.c -o bin/screen.o

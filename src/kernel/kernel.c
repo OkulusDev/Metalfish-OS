@@ -11,10 +11,11 @@
 
 
 // #include "../common.h"
-#include "../drivers/screen.h"
 #include "../cpu/isr.h"
+#include "../drivers/screen.h"
 #include "kernel.h"
 #include "../libc/string.h"
+#include "../libc/mem.h"
 
 
 void	kmain() {
@@ -39,11 +40,24 @@ void user_input(char *input) {
         asm volatile("hlt");
     } else if (strcmp(input, "HELP") == 0) {
     	kprint("END - stopping the CPU\n"
-    			"INFO - info about OS\n");
+    			"INFO - info about OS\n"
+    			"PAGE - to request a kmalloc()");
     } else if (strcmp(input, "INFO") == 0) {
     	kprint("Metalfish OS 0.9.11 by OkulusDev\n"
     			"Native Build, Release Beta 2\n"
     			"Hello World!\n");
+    }  else if (strcmp(input, "PAGE") == 0) {
+		u32 phys_addr;
+        u32 page = kmalloc(1000, 1, &phys_addr);
+        char page_str[16] = "";
+        hex_to_ascii(page, page_str);
+        char phys_str[16] = "";
+        hex_to_ascii(phys_addr, phys_str);
+        kprint("Page: ");
+        kprint(page_str);
+        kprint(", physical address: ");
+        kprint(phys_str);
+        kprint("\n");
     } else {
     	kprint("[ERROR] INVALID COMMAND: ");
     	kprint(input);
@@ -51,4 +65,3 @@ void user_input(char *input) {
     
     kprint("\n!#> ");
 }
-	
