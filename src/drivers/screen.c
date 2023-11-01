@@ -14,7 +14,7 @@
 #include "../cpu/ports.h"
 #include "../libc/mem.h"
 
-/* Declaration of private functions */
+/* Декларирования частных функций */
 int get_cursor_offset();
 void set_cursor_offset(int offset);
 int print_char(char c, int col, int row, char attr);
@@ -23,15 +23,15 @@ int get_offset_row(int offset);
 int get_offset_col(int offset);
 
 /**********************************************************
- * Public Kernel API functions                            *
+ * Публичные функции API ядра                             *
  **********************************************************/
 
 /**
- * Print a message on the specified location
- * If col, row, are negative, we will use the current offset
+ * Вывод сообщения в специфической локации
+ * Если col, row отрицательные, то используем текущий оффсет
  */
 void kprint_at(char *message, int col, int row, int color) {
-    /* Set cursor if col/row are negative */
+    /* Установка курсора и оффсета если если col, row отрицательные */
     int offset;
     if (col >= 0 && row >= 0)
         offset = get_offset(col, row);
@@ -41,7 +41,7 @@ void kprint_at(char *message, int col, int row, int color) {
         col = get_offset_col(offset);
     }
 
-    /* Loop through message and print it */
+    /* "Прокрутка" сообщения и его вывод */
     int i = 0;
     while (message[i] != 0) {
     	if (color == 0) {
@@ -78,34 +78,39 @@ void kprint_at(char *message, int col, int row, int color) {
 			offset = print_char(message[i++], col, row, WHITE_ON_BLUE);			
 		}
 
-        /* Compute row/col for next iteration */
+        /* Вычисление row/col для следующей итерации */
         row = get_offset_row(offset);
         col = get_offset_col(offset);
     }
 }
 
 void kprint(char *message) {
+	// Вывод текста. Цвет по умолчанию - белый на черном (код 0)
     kprint_at(message, -1, -1, 0);
 }
 
 void kprint_colored(char *message, int color) {
+	/* Цветной вывод текста. Принимает также, в отличии от kprint, код цвета.
+	*/
 	kprint_at(message, -1, -1, color);
 }
 
 void kprint_backspace() {
+	// Вывод бекспейса (удаления символа)
     int offset = get_cursor_offset()-2;
     int row = get_offset_row(offset);
     int col = get_offset_col(offset);
+    // TODO: подумать над заменением WHITE_ON_BLACK единой переменной
     print_char(0x08, col, row, WHITE_ON_BLACK);
 }
 
 
 /**********************************************************
- * Private kernel functions                               *
+ * Приватные функции ядра                                 *
  **********************************************************/
 
 
-/**
+/** TODO: Translate it from EN to RU
  * Innermost print function for our kernel, directly accesses the video memory 
  *
  * If 'col' and 'row' are negative, we will print at current cursor location
