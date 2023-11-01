@@ -1,5 +1,7 @@
 # Введение | Документация Metalfish OS
 
+## [Главная страница](./index.md)
+
 Мetalfish OS - это свободная, открытая операционная система для x86_64 архитектуры на ассемблере NASM и C (компилятор GCC).
 
 Metalfish OS состоит из двух слов - metal (англ. металл) и fish (англ. рыба). Это означает, что эта операционная система гибкая, как рыба, и стабильная и твердая, как металл.
@@ -257,8 +259,3 @@ Hello, world!
  + [Погружение в ассемблер](https://xakep.ru/2017/09/11/asm-course-1/)
  + [От изучающего ассемблер до взломщика программ](https://wasm.in/attachments/skljarov-i-izuchaem-assembler-za-7-dnej-pdf.2906/)
  + [Руководство по ассемблеру MASM intel x86_64](https://metanit.com/assembler/tutorial/)
-
-## Оглавление
-
-1. > [Введение](./getting-started.md)
-2. [BIOS и ОС](./bios-and-os.md)
