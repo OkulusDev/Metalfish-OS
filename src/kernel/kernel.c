@@ -24,7 +24,11 @@ void kmain() {
 	isr_install();
     irq_install();
 
-	kprint("Welcome to Metalfish OS 0.10.13\n");
+	kprint(" __ __   __ ___  __      ___ ___  __ |      _   __\n");
+	kprint("|  |  | |__  |  |__| |   |__  |  |__ |_    | | |__\n");
+	kprint("|  |  | |__  |  |  | |__ |   _|_ __/ | |   |_| __/\n\n");
+	
+	kprint("Welcome to Metalfish OS 0.10.14\n");
 	kprint("Repository: https://github.com/OkulusDev/Metalfish-OS\n\n");
 
 	kprint("MetalShell v0.2.3\n"
@@ -39,9 +43,9 @@ void user_input(char *input) {
     } else if (strcmp(input, "HELP") == 0) {
     	kprint("END - stopping the CPU\n"
     			"INFO - info about OS\n"
-    			"PAGE - to request a kmalloc()");
+    			"PAGE - to request a kmalloc()\n");
     } else if (strcmp(input, "INFO") == 0) {
-    	kprint("Metalfish OS 0.10.13 by OkulusDev\n"
+    	kprint("Metalfish OS 0.10.14 by OkulusDev\n"
     			"Native Build, Release Beta 2\n"
     			"Hello World!\n");
     }  else if (strcmp(input, "PAGE") == 0) {
