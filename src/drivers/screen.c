@@ -30,7 +30,7 @@ int get_offset_col(int offset);
  * Print a message on the specified location
  * If col, row, are negative, we will use the current offset
  */
-void kprint_at(char *message, int col, int row) {
+void kprint_at(char *message, int col, int row, int color) {
     /* Set cursor if col/row are negative */
     int offset;
     if (col >= 0 && row >= 0)
@@ -44,7 +44,40 @@ void kprint_at(char *message, int col, int row) {
     /* Loop through message and print it */
     int i = 0;
     while (message[i] != 0) {
-        offset = print_char(message[i++], col, row, WHITE_ON_BLACK);
+    	if (color == 0) {
+	        offset = print_char(message[i++], col, row, WHITE_ON_BLACK);
+		} else if (color == 1) {
+	        offset = print_char(message[i++], col, row, BLUE_ON_BLACK);
+		} else if (color == 2) {
+			offset = print_char(message[i++], col, row, GREEN_ON_BLACK);
+		} else if (color == 3) {
+			offset = print_char(message[i++], col, row, CYAN_ON_BLACK);
+		} else if (color == 4) {
+			offset = print_char(message[i++], col, row, RED_ON_BLACK);
+		} else if (color == 5) {
+			offset = print_char(message[i++], col, row, MAGENTA_ON_BLACK);
+		} else if (color == 6) {
+			offset = print_char(message[i++], col, row, BROWN_ON_BLACK);
+		} else if (color == 7) {
+			offset = print_char(message[i++], col, row, LGREY_ON_BLACK);
+		} else if (color == 8) {
+			offset = print_char(message[i++], col, row, DGREY_ON_BLACK);
+		} else if (color == 9) {
+			offset = print_char(message[i++], col, row, LBLUE_ON_BLACK);
+		} else if (color == 10) {
+			offset = print_char(message[i++], col, row, LGREEN_ON_BLACK);
+		} else if (color == 11) {
+			offset = print_char(message[i++], col, row, LCYAN_ON_BLACK);
+		} else if (color == 12) {
+			offset = print_char(message[i++], col, row, LRED_ON_BLACK);
+		} else if (color == 13) {
+			offset = print_char(message[i++], col, row, LMAGENTA_ON_BLACK);
+		} else if (color == 14) {
+			offset = print_char(message[i++], col, row, YELLOW_ON_BLACK);
+		} else if (color == 15) {
+			offset = print_char(message[i++], col, row, WHITE_ON_BLUE);			
+		}
+
         /* Compute row/col for next iteration */
         row = get_offset_row(offset);
         col = get_offset_col(offset);
@@ -52,7 +85,11 @@ void kprint_at(char *message, int col, int row) {
 }
 
 void kprint(char *message) {
-    kprint_at(message, -1, -1);
+    kprint_at(message, -1, -1, 0);
+}
+
+void kprint_colored(char *message, int color) {
+	kprint_at(message, -1, -1, color);
 }
 
 void kprint_backspace() {
@@ -117,7 +154,7 @@ int print_char(char c, int col, int row, char attr) {
 
         offset -= 2 * MAX_COLS;
     }
-
+	
     set_cursor_offset(offset);
     return offset;
 }

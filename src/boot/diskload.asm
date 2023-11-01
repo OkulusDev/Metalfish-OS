@@ -66,13 +66,13 @@ disk_sectors_error:
 	call puts_chars
 
 SUCCESS_MSG:
-	db "[SUCCESS] Disk was read ", 0
+	db "Success::Disk was read ", 0
 
 DISK_ERR_MSG:
-	db "[DiskError] Disk read ", 0
+	db "DiskError::Disk read ", 0
 
 SECTORS_ERR_MSG:
-	db "[SectorsError] Incorrect number of sectors read ", 0
+	db "::SectorsError::Incorrect number of sectors read ", 0
 
 disk_loop:
 	jmp $

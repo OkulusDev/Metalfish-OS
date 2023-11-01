@@ -12,6 +12,13 @@
 
 [org 0x7c00]
 
+section .text
+        ;multiboot spec
+        align 4
+        dd 0x1BADB002            ;магические числа
+        dd 0x00                  ;флаги
+        dd - (0x1BADB002 + 0x00) ;контрольная сумма. мч+ф+кс должно равняться нулю
+
 KERNEL_OFFSET equ 0x1000	; Смещение в памяти, из которого мы загрузим ядро
 
 	mov [BOOT_DRIVE], dl	; BIOS stores our boot drive in DL , so it ’s
@@ -57,9 +64,9 @@ BEGIN_PM:
 
 
 BOOT_DRIVE:			db 0
-MSG_REAL_MODE:		db "[Start] 16Bit Real Mode", 0 						; [Старт] 16 битный реальный режим
-MSG_PROT_MODE:		db "[Success] landed in 32Bit Protected mode", 0        ; [Успех] 32 битный защищенный режим
-MSG_LOAD_KERNEL:	db "[Loading] kernel into VIDEO_MEMORY", 0 				; [Загрузка] ядра с видео памятью
+MSG_REAL_MODE:		db "Start::16Bit RealMode", 0 						; [Старт] 16 битный реальный режим
+MSG_PROT_MODE:		db "Success::landed in 32Bit ProtMode", 0        ; [Успех] 32 битный защищенный режим
+MSG_LOAD_KERNEL:	db "Load::kernel into VIDEO_MEMORY", 0 				; [Загрузка] ядра с видео памятью
 
 times 510-($-$$) db 0
 dw 0xaa55
