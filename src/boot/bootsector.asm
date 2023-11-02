@@ -12,13 +12,6 @@
 
 [org 0x7c00]
 
-section .text
-        ;multiboot spec
-        align 4
-        dd 0x1BADB002            ;магические числа
-        dd 0x00                  ;флаги
-        dd - (0x1BADB002 + 0x00) ;контрольная сумма. мч+ф+кс должно равняться нулю
-
 KERNEL_OFFSET equ 0x1000	; Смещение в памяти, из которого мы загрузим ядро
 
 	mov [BOOT_DRIVE], dl	; BIOS stores our boot drive in DL , so it ’s

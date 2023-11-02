@@ -1,6 +1,6 @@
 # Metalfish-OS
 
-*Текущая версия - 0.11.16*
+*Текущая версия - 0.12.17*
 
 Metalfish OS - простая и быстрая операционная система
 
@@ -30,6 +30,12 @@ export PATH=$PATH:/usr/local/i386elfgcc/bin
 # Установка и компиляция
 git clone https://github.com/OkulusDev/Metalfish-OS.git
 cd Metalfish-OS
+
+# Создать образ диска при помощи dd
+make build clean diskimg
+make run_diskimg
+
+# ИЛИ не создавать образ диска
 make build clean
 make run
 ```
@@ -37,7 +43,7 @@ make run
 ## Документация
 Пользовательскую документацию можно получить по [этой ссылке](./docs/ru/index.md).
 
-[Релизы программы]: https://github.com/OkulusDev/Oxygen/releases
+[Релизы программы]: https://github.com/OkulusDev/Metalfish-OS/releases
 
 ## Поддержка
 Если у вас возникли сложности или вопросы по использованию Metalfish OS, создайте 
@@ -81,3 +87,39 @@ make run
  + 0.11.14 - добавление функции для вывода текста различным цветом (TODO: добавить также с разным фоновым цветом), улучшение документации, незначительне изменения
  + 0.11.15 - документирование и комментирование кода
  + 0.11.16 - изменения цветов и улучшения вывода
+
+## Литература, источники
+
+По языку ассемблера:
+
+ + Зубков С. В. «Assembler для DOS, Windows и Unix»
+ + [Введение в машинный код](http://wasm.ru/article.php?article=1022001)
+ + [Программирование на ассемблере под DOS](http://wasm.ru/article.php?article=1022003)
+ + [Введение в ассемблер](https://hackware.ru/?p=8654)
+ + [ASCII таблица](https://www.asciitable.com/)
+ + [Погружение в ассемблер](https://xakep.ru/2017/09/11/asm-course-1/)
+ + [От изучающего ассемблер до взломщика программ](https://wasm.in/attachments/skljarov-i-izuchaem-assembler-za-7-dnej-pdf.2906/)
+ + [Руководство по ассемблеру MASM intel x86_64](https://metanit.com/assembler/tutorial/)
+
+По языку Си:
+
+ + Керниган Б., Ритчи Д. «Язык программирования C»
+ + Шилдт Г. «Полный справочник по C»
+
+По устройству операционных систем:
+
+ + Таненбаум Э. «Современные операционные системы»
+ + Таненбаум Э. «Операционные системы: Разработка и реализация»
+ + Олифер В., Олифер Н. «Сетевые операционные системы»
+ + [OSDEV Wiki](http://osdev.org)
+
+По архитектуре ЭВМ:
+
+ + Таненбаум Э. «Архитектура компьютера»
+ + Гук М. «Аппаратные средства IBM PC. Энциклопедия»
+ + Петцольд Ч. «Код. Тайный язык информатики»
+
+Справочная информация
+
+ + [Dan Rollins’s TechHelp](http://webpages.charter.net/danrollins/techhelp/index.htm)
+ + [Intel Software Developer Manual](http://www.intel.com/products/processor/manuals/)

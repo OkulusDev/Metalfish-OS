@@ -120,7 +120,7 @@ void kprint_backspace() {
  */
 int print_char(char c, int col, int row, char attr) {
     u8 *vidmem = (u8*) VIDEO_ADDRESS;
-    if (!attr) attr = WHITE_ON_BLACK;
+    if (!attr) attr = WHITE_ON_BLUE;
 
     /* Error control: print a red 'E' if the coords aren't right */
     if (col >= MAX_COLS || row >= MAX_ROWS) {
@@ -159,6 +159,16 @@ int print_char(char c, int col, int row, char attr) {
 
         offset -= 2 * MAX_COLS;
     }
+
+	// int screen_size = MAX_COLS * MAX_ROWS;
+	//     int i;
+	//     u8 *screen = (u8*) VIDEO_ADDRESS;
+	// 
+	//     for (i = 0; i < screen_size; i++) {
+	//         screen[i*2] = ' ';
+	//         screen[i*2+1] = WHITE_ON_BLACK;
+	//     }
+	//     set_cursor_offset(get_offset(0, 0));
 	
     set_cursor_offset(offset);
     return offset;

@@ -72,10 +72,11 @@ DISK_ERR_MSG:
 	db "DiskError::Disk read ", 0
 
 SECTORS_ERR_MSG:
-	db "::SectorsError::Incorrect number of sectors read ", 0
+	db "SectorsError::Incorrect number of sectors read ", 0
 
 disk_loop:
 	jmp $
 
 disk_exit:
 	ret
+
