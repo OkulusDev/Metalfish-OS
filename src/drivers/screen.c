@@ -110,19 +110,19 @@ void kprint_backspace() {
  **********************************************************/
 
 
-/** TODO: Translate it from EN to RU
- * Innermost print function for our kernel, directly accesses the video memory 
+/**
+ * Функции вывода строки для ядра, использующие видео-память
  *
- * If 'col' and 'row' are negative, we will print at current cursor location
- * If 'attr' is zero it will use 'white on black' as default
- * Returns the offset of the next character
- * Sets the video cursor to the returned offset
+ * Если 'col' и 'row' отрицательные, мы пишем на текущей позиции курсора
+ * Если 'attr' равен 0 он использует 'белое на чернм' по умолчанию
+ * Возвращает оффсет следующего символа
+ * Устанавливает курсор на оффсете
  */
 int print_char(char c, int col, int row, char attr) {
     u8 *vidmem = (u8*) VIDEO_ADDRESS;
     if (!attr) attr = WHITE_ON_BLUE;
 
-    /* Error control: print a red 'E' if the coords aren't right */
+    /* Контроль ошибок: вывод крассной 'E' если координаты неверные */
     if (col >= MAX_COLS || row >= MAX_ROWS) {
         vidmem[2*(MAX_COLS)*(MAX_ROWS)-2] = 'E';
         vidmem[2*(MAX_COLS)*(MAX_ROWS)-1] = RED_ON_WHITE;
@@ -145,7 +145,7 @@ int print_char(char c, int col, int row, char attr) {
         offset += 2;
     }
 
-    /* Check if the offset is over screen size and scroll */
+    /* Проверяем, больше ли оффсет экрана, и скроллим */
     if (offset >= MAX_ROWS * MAX_COLS * 2) {
         int i;
         for (i = 1; i < MAX_ROWS; i++) 
@@ -153,41 +153,30 @@ int print_char(char c, int col, int row, char attr) {
                         (u8*)(get_offset(0, i-1) + VIDEO_ADDRESS),
                         MAX_COLS * 2);
 
-        /* Blank last line */
+        /* Пустая последняя строка */
         char *last_line = (char*) (get_offset(0, MAX_ROWS-1) + (u8*) VIDEO_ADDRESS);
         for (i = 0; i < MAX_COLS * 2; i++) last_line[i] = 0;
 
         offset -= 2 * MAX_COLS;
     }
 
-	// int screen_size = MAX_COLS * MAX_ROWS;
-	//     int i;
-	//     u8 *screen = (u8*) VIDEO_ADDRESS;
-	// 
-	//     for (i = 0; i < screen_size; i++) {
-	//         screen[i*2] = ' ';
-	//         screen[i*2+1] = WHITE_ON_BLACK;
-	//     }
-	//     set_cursor_offset(get_offset(0, 0));
-	
     set_cursor_offset(offset);
     return offset;
 }
 
 int get_cursor_offset() {
-    /* Use the VGA ports to get the current cursor position
-     * 1. Ask for high byte of the cursor offset (data 14)
-     * 2. Ask for low byte (data 15)
+    /* Используем VGA порты для получения текущей позиции курсора
+     * 1. (data 14) Получаем высший байт оффсета курсора
+     * 2. (data 15) Получаем низший байт
      */
     port_byte_out(REG_SCREEN_CTRL, 14);
     int offset = port_byte_in(REG_SCREEN_DATA) << 8; /* High byte: << 8 */
     port_byte_out(REG_SCREEN_CTRL, 15);
     offset += port_byte_in(REG_SCREEN_DATA);
-    return offset * 2; /* Position * size of character cell */
+    return offset * 2; /* Позиция * размер клетки */
 }
 
 void set_cursor_offset(int offset) {
-    /* Similar to get_cursor_offset, but instead of reading we write data */
     offset /= 2;
     port_byte_out(REG_SCREEN_CTRL, 14);
     port_byte_out(REG_SCREEN_DATA, (u8)(offset >> 8));
@@ -213,7 +202,7 @@ int get_offset_row(int offset) { return offset / (2 * MAX_COLS); }
 int get_offset_col(int offset) { return (offset - (get_offset_row(offset)*2*MAX_COLS))/2; }
 
 
-
+// Старый код
 // #include "screen.h"
 // #include "lowlevel_io.h"
 // #include "../common.h"

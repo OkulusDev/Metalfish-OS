@@ -29,20 +29,22 @@
 // void	scroll_line();
 // u16		get_cursor();
 // void	set_cursor(u16 pos);
-// 
+// ^^^ Старый код
 
 #ifndef SCREEN_H
 #define SCREEN_H
 
+// Подключаем типы из CPU
 #include "../cpu/type.h"
 
-#define VIDEO_ADDRESS 0xb8000
-#define MAX_ROWS 25
-#define MAX_COLS 80
-#define WHITE_ON_BLACK 0x0f
+#define VIDEO_ADDRESS 0xb8000					// Видео-адрес
+#define MAX_ROWS 25								// Максимальное кол-во линий
+#define MAX_COLS 80								// Максимальное кол-во колонок
+#define WHITE_ON_BLACK 0x0f						// HEX-код белого на черном
 #define WHITE_ON_BLUE 0x1f
 #define WHITE_ON_DGREY 0x8
 
+// HEX-коды разных цветов на черном
 #define BLUE_ON_BLACK 0x01
 #define GREEN_ON_BLACK 0x02
 #define CYAN_ON_BLACK 0x03
@@ -60,11 +62,11 @@
 
 #define RED_ON_WHITE 0xf4
 
-/* Screen i/o ports */
+/* Порты ввода/вывода экрана */
 #define REG_SCREEN_CTRL 0x3d4
 #define REG_SCREEN_DATA 0x3d5
 
-/* Public kernel API */
+/* Публичное API ядра */
 void clear_screen();
 void kprint_at(char *message, int col, int row, int color);
 void kprint(char *message);

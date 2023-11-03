@@ -24,7 +24,7 @@ void help_command_shell() {
 }
 
 void info_command_shell() {
-	kprint("Metalfish OS 0.12.18 by OkulusDev\n"
+	kprint("Metalfish OS 0.12.19 by OkulusDev\n"
 	    	"Native Build, Release Beta 3\n"
 	    	"Hello, User!\n");
 }
@@ -50,7 +50,7 @@ void fetch_art() {
 	kprint_colored("|  |  | |__  |  |  | |__ |   _|_ __/ | |   |_| __/\n", 14);
 	kprint_colored("==================================================\n", 14);
 	kprint_colored("OS: METALFISH OS\n", 2);
-	kprint_colored("VERSION: 0.12.18\n", 3);
+	kprint_colored("VERSION: 0.12.19\n", 3);
 	kprint_colored("SHELL: METALSHELL\n", 4);
 	kprint_colored("Copyright (C) Okulus Dev\nRepository: https://github.com/OkulusDev/Metalfish-OS\n", 5);
 }
