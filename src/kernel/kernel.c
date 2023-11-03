@@ -25,7 +25,7 @@ void kmain() {
     irq_install();
 
 	// Выводим синию строку с белым текстом о версии
-	kprint_colored("METALFISH OS 0.12.17                                                            \n", 15);
+	kprint_colored("METALFISH OS 0.12.18                                                            \n", 15);
 
 	// Приглашение
 	kprint("Welcome to Metalfish OS\n");
@@ -35,7 +35,7 @@ void kmain() {
 	fetch_art();
 
 	// Уведомление о старте оболочки командной строки
-	kprint("\nMetalShell v0.3.5\n"
+	kprint("\nMetalShell v0.3.6 "
 	        "Type END to halt the CPU\n"
 	        "Type HELP to view commands\n!#> ");
 }
@@ -53,7 +53,7 @@ void user_input(char *input) {
     } else if (strcmp(input, "CLEAR") == 0) {
     	// Очистка экрана
     	clear_screen();
-    	kprint_colored("METALFISH OS 0.12.17                                                           \n", 15);
+    	kprint_colored("METALFISH OS 0.12.18                                                           \n", 15);
     } else if (strcmp(input, "INFO") == 0) {
     	// Информация о система
     	info_command_shell();

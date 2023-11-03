@@ -3,7 +3,7 @@ SRC_DIR=src
 BIN_DIR=bin
 C=i386-elf-gcc
 LD=i386-elf-ld
-DISKIMG_NAME=metalfishos_floppy_i386_0.12.17.img
+DISKIMG_NAME=metalfishos_floppy_i386_0.12.18.img
 
 build:
 	$(ASM) src/boot/bootsector.asm -f bin -o bin/bootsector.bin
@@ -22,14 +22,19 @@ build:
 	$(LD) -o bin/kernel.bin -Ttext 0x1000 bin/kernel_entry.o bin/kernel.o bin/interrupt.o bin/keyboard.o bin/screen.o bin/idt.o bin/isr.o bin/ports.o bin/timer.o bin/mem.o bin/string.o bin/utils.o --oformat binary
 	cat bin/bootsector.bin bin/kernel.bin > bin/metalfishos.bin
 
-run:
+fullbuild:
+	make build
+	make diskimg
+	make clean
+
+run_bin:
 	qemu-system-i386 -fda bin/metalfishos.bin
 
 diskimg:
 	dd if=/dev/zero of=diskimgs/$(DISKIMG_NAME) bs=1024 count=1440
 	dd if=$(BIN_DIR)/metalfishos.bin of=diskimgs/$(DISKIMG_NAME) conv=notrunc
 
-run_diskimg:
+run:
 	qemu-system-i386 -fda diskimgs/$(DISKIMG_NAME) -boot a
 
 clean:
