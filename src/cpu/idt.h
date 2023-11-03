@@ -3,19 +3,19 @@
 
 #include "type.h"
 
-/* Segment selectors */
+/* Селекторы сегментов */
 #define KERNEL_CS 0x08
 
-/* How every interrupt gate (handler) is defined */
+/* Как определяется каждый элемент прерывания (обработчик) */
 typedef struct {
-    u16 low_offset; /* Lower 16 bits of handler function address */
-    u16 sel; /* Kernel segment selector */
+    u16 low_offset; /* Младшие 16 бит адреса функции обработчика */
+    u16 sel; /* Селектор сегментов ядра */
     u8 always0;
-    /* First byte
-     * Bit 7: "Interrupt is present"
-     * Bits 6-5: Privilege level of caller (0=kernel..3=user)
-     * Bit 4: Set to 0 for interrupt gates
-     * Bits 3-0: bits 1110 = decimal 14 = "32 bit interrupt gate" */
+    /* 
+    Бит 7 первого байта: "Присутствует прерывание"
+Биты 6-5: Уровень привилегий вызывающего абонента (0=ядро..3=пользователь)
+Бит 4: Устанавливается равным 0 для элементов прерывания
+Биты 3-0: биты 1110 = десятичное число 14 = "32-разрядный элемент прерывания"*/
     u8 flags; 
     u16 high_offset; /* Higher 16 bits of handler function address */
 } __attribute__((packed)) idt_gate_t ;

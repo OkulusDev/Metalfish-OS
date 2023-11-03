@@ -2,7 +2,7 @@
 #include "../cpu/type.h"
 
 /**
- * K&R implementation
+ * K&R Реализация
  */
 void int_to_ascii(int n, char str[]) {
     int i, sign;
@@ -67,7 +67,7 @@ void backspace(char s[]) {
 }
 
 /* K&R 
- * Returns <0 if s1<s2, 0 if s1==s2, >0 if s1>s2 */
+ * Возвращает <0 если s1<s2, 0 если s1==s2, >0 если s1>s2 */
 int strcmp(char s1[], char s2[]) {
     int i;
     for (i = 0; s1[i] == s2[i]; i++) {

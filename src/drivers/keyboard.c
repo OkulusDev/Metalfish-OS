@@ -1,3 +1,15 @@
+/*------------------------------------------------------------------------------
+*  Metalfish OS Drivers source code
+*  File: drivers/keyboard.c
+*  Title: Функции работы с клавиатурой
+*  Last Change Date: 30 October 2023, 12:28 (UTC)
+*  Author: Okulus Dev
+*  License: GNU GPL v3
+* ------------------------------------------------------------------------------
+*	Description: null
+* ----------------------------------------------------------------------------*/
+
+
 #include "keyboard.h"
 #include "../cpu/ports.h"
 #include "../cpu/isr.h"
@@ -25,7 +37,7 @@ const char sc_ascii[] = { '?', '?', '1', '2', '3', '4', '5', '6',
         'B', 'N', 'M', ',', '.', '/', '?', '?', '?', ' '};
 
 static void keyboard_callback(registers_t regs) {
-    /* The PIC leaves us the scancode in port 0x60 */
+    /* PIC выходы сканкодов в порту 0x60 */
     u8 scancode = port_byte_in(0x60);
     
     if (scancode > SC_MAX) return;
@@ -34,11 +46,11 @@ static void keyboard_callback(registers_t regs) {
         kprint_backspace();
     } else if (scancode == ENTER) {
         kprint("\n");
-        user_input(key_buffer); /* kernel-controlled function */
+        user_input(key_buffer); /* функция под управлением ядра */
         key_buffer[0] = '\0';
     } else {
         char letter = sc_ascii[(int)scancode];
-        /* Remember that kprint only accepts char[] */
+        /* Запоминает только полученный char[] */
         char str[2] = {letter, '\0'};
         append(key_buffer, letter);
         kprint(str);

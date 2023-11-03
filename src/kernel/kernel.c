@@ -25,7 +25,7 @@ void kmain() {
     irq_install();
 
 	// Выводим синию строку с белым текстом о версии
-	kprint_colored("METALFISH OS 0.12.19                                                            \n", 15);
+	kprint_colored("METALFISH OS 0.12.20                                                            \n", 15);
 
 	// Приглашение
 	kprint("Welcome to Metalfish OS\n");
@@ -53,7 +53,7 @@ void user_input(char *input) {
     } else if (strcmp(input, "CLEAR") == 0) {
     	// Очистка экрана
     	clear_screen();
-    	kprint_colored("METALFISH OS 0.12.19                                                           \n", 15);
+    	kprint_colored("METALFISH OS 0.12.20                                                           \n", 15);
     } else if (strcmp(input, "INFO") == 0) {
     	// Информация о системе
     	info_command_shell();

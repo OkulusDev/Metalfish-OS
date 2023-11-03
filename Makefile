@@ -3,7 +3,7 @@ SRC_DIR=src
 BIN_DIR=bin
 C=i386-elf-gcc
 LD=i386-elf-ld
-DISKIMG_NAME=metalfishos_floppy_i386_0.12.19.img
+DISKIMG_NAME=metalfishos_floppy_i386_0.12.20.img
 
 build:
 	$(ASM) src/boot/bootsector.asm -f bin -o bin/bootsector.bin
@@ -25,7 +25,6 @@ build:
 fullbuild:
 	make build
 	make diskimg
-	make clean
 
 run_bin:
 	qemu-system-i386 -fda bin/metalfishos.bin

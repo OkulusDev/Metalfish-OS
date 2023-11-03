@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------
 *  Metalfish OS Drivers source code
 *  File: drivers/screen.h
-*  Title: Загаловочный файл screen.c
+*  Title: Заголовочный файл screen.c
 *  Last Change Date: 30 October 2023, 12:28 (UTC)
 *  Author: Okulus Dev
 *  License: GNU GPL v3
