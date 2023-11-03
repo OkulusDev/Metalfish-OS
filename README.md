@@ -31,12 +31,7 @@ export PATH=$PATH:/usr/local/i386elfgcc/bin
 git clone https://github.com/OkulusDev/Metalfish-OS.git
 cd Metalfish-OS
 
-# Создать образ диска при помощи dd
-make build clean diskimg
-make run_diskimg
-
-# ИЛИ не создавать образ диска
-make build clean
+make fullbuild
 make run
 ```
 
