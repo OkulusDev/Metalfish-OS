@@ -1,29 +1,28 @@
 #include "ports.h"
 
 /**
- * Read a byte from the specified port
+ * Чтение байтов из специфичного порта
  */
 u8 port_byte_in (u16 port) {
     u8 result;
-    /* Inline assembler syntax
-     * !! Notice how the source and destination registers are switched from NASM !!
-     *
-     * '"=a" (result)'; set '=' the C variable '(result)' to the value of register e'a'x
-     * '"d" (port)': map the C variable '(port)' into e'd'x register
-     *
-     * Inputs and outputs are separated by colons
+    /* Встроенный синтаксис ассемблера
      */
     __asm__("in %%dx, %%al" : "=a" (result) : "d" (port));
     return result;
 }
 
 void port_byte_out (u16 port, u8 data) {
-    /* Notice how here both registers are mapped to C variables and
-     * nothing is returned, thus, no equals '=' in the asm syntax 
-     * However we see a comma since there are two variables in the input area
-     * and none in the 'return' area
+    /* Обратите внимание, что здесь оба регистра сопоставляются 
+    * с переменными C и ничего не возвращается, таким образом, в 
+    * синтаксисе asm нет равенства '='. Однако мы видим запятую, 
+    * поскольку во входных данных есть две переменные, а 
+    * в области "return" их нет
      */
     __asm__ __volatile__("out %%al, %%dx" : : "a" (data), "d" (port));
+}
+
+void outports(u16 port, u16 data) {
+    __asm__ __volatile__("outw %1, %0" : : "dN" (port), "a" (data));
 }
 
 u16 port_word_in (u16 port) {

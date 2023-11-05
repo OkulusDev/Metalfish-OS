@@ -16,16 +16,20 @@
 #include "kernel.h"
 #include "utils.h"
 #include "../libc/string.h"
+#include "../cpu/ports.h"
+#include "../drivers/audio.h"
+#include "../cpu/timer.h"
 
 
 void kmain() {
 	// Запускаемая функция ядра //
 	clear_screen();
 	isr_install();
-    irq_install();
+	irq_install();
+	beep();
 
 	// Выводим синию строку с белым текстом о версии
-	kprint_colored("METALFISH OS 0.12.20                                                            \n", 15);
+	kprint_colored("METALFISH OS 0.13.22                                                            \n", 15);
 
 	// Приглашение
 	kprint("Welcome to Metalfish OS\n");
@@ -46,6 +50,8 @@ void user_input(char *input) {
     	// Остановка CPU
         kprint("Stopping the CPU. Bye! (recommended shutdown PC)\n");
         asm volatile("hlt");
+    } else if (strcmp(input, "SHUTDOWN") == 0) {
+    	outports(0x604, 0x2000);
     } else if (strcmp(input, "HELP") == 0) {
     	/* Вывод строки о помощи
     	strcmp помогает узнать, что ввел пользователь*/
@@ -53,7 +59,7 @@ void user_input(char *input) {
     } else if (strcmp(input, "CLEAR") == 0) {
     	// Очистка экрана
     	clear_screen();
-    	kprint_colored("METALFISH OS 0.12.20                                                           \n", 15);
+    	kprint_colored("METALFISH OS 0.13.22                                                           \n", 15);
     } else if (strcmp(input, "INFO") == 0) {
     	// Информация о системе
     	info_command_shell();
