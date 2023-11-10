@@ -29,19 +29,16 @@ void kmain() {
 	beep();
 
 	// Выводим синию строку с белым текстом о версии
-	kprint_colored("METALFISH OS 0.13.22                                                            \n", 15);
+	kprint_colored("METALFISH OS 0.13.23                                                            \n", 15);
 
 	// Приглашение
 	kprint("Welcome to Metalfish OS\n");
-	kprint("Copyright (C) Okulus Dev\nRepository: https://github.com/OkulusDev/Metalfish-OS\n\n");
-
-	// Вывод небольшого ascii-арт желтым цветом
-	fetch_art();
+	kprint("Copyright (C) Okulus Dev\nRepository: https://github.com/OkulusDev/Metalfish-OS\n");
 
 	// Уведомление о старте оболочки командной строки
 	kprint("\nMetalShell v0.3.6 "
 	        "Type END to halt the CPU\n"
-	        "Type HELP to view commands\n!#> ");
+	        "Type HELP to view commands\n\n!#> ");
 }
 
 void user_input(char *input) {
@@ -49,6 +46,14 @@ void user_input(char *input) {
     if (strcmp(input, "END") == 0) {
     	// Остановка CPU
         kprint("Stopping the CPU. Bye! (recommended shutdown PC)\n");
+        rsod_clear_screen();
+        kprint_colored("METALFISH OS 0.13.23                                                            \n", 17);
+
+        kprint_colored("Metalfish OS Kernel Fatal Error\n", 16);
+        kprint_colored(" >>> Sended END: halting the CPU\n", 16);
+        kprint_colored("HLT interrupt assmebly: error code 0x0000000000 (HLTCPU)\n", 16);
+        kprint_colored("Recomended: shutdown PC\n", 16);
+        kprint_colored("[WARNING] This message is normal.", 16);
         asm volatile("hlt");
     } else if (strcmp(input, "SHUTDOWN") == 0) {
     	outports(0x604, 0x2000);
@@ -59,12 +64,10 @@ void user_input(char *input) {
     } else if (strcmp(input, "CLEAR") == 0) {
     	// Очистка экрана
     	clear_screen();
-    	kprint_colored("METALFISH OS 0.13.22                                                           \n", 15);
+    	kprint_colored("METALFISH OS 0.13.23                                                           \n", 15);
     } else if (strcmp(input, "INFO") == 0) {
     	// Информация о системе
     	info_command_shell();
-    } else if (strcmp(input, "FETCH") == 0) {
-    	fetch_art();
     }  else if (strcmp(input, "PAGE") == 0) {
     	malloc_command_shell();
     } else {

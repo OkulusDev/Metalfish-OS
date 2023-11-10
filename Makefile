@@ -42,3 +42,4 @@ clean:
 
 clean_all:
 	rm bin/*
+	rm diskimgs/*

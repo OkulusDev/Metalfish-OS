@@ -42,6 +42,7 @@
 #define MAX_COLS 80								// Максимальное кол-во колонок
 #define WHITE_ON_BLACK 0x0f						// HEX-код белого на черном
 #define WHITE_ON_BLUE 0x1f
+#define WHITE_ON_RED 0x4f
 #define WHITE_ON_DGREY 0x8
 
 // HEX-коды разных цветов на черном
@@ -68,6 +69,7 @@
 
 /* Публичное API ядра */
 void clear_screen();
+void rsod_clear_screen();
 void kprint_at(char *message, int col, int row, int color);
 void kprint(char *message);
 void kprint_colored(char *message, int color);
