@@ -24,7 +24,7 @@ void help_command_shell() {
 }
 
 void info_command_shell() {
-	kprint("Metalfish OS 0.13.23 by OkulusDev\n"
+	kprint("Metalfish OS 0.13.24 by OkulusDev\n"
 	    	"Native Build, Release Beta 3\n"
 	    	"Hello, User!\n");
 }

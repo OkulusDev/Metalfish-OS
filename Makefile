@@ -3,7 +3,7 @@ SRC_DIR=src
 BIN_DIR=bin
 C=i386-elf-gcc
 LD=i386-elf-ld
-DISKIMG_NAME=metalfishos_floppy_i386_0.13.22.img
+DISKIMG_NAME=metalfishos_floppy_i386_0.13.24.img
 
 build:
 	$(ASM) src/boot/bootsector.asm -f bin -o bin/bootsector.bin
